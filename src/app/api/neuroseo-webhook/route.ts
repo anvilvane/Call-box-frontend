@@ -1,4 +1,8 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import path from 'node:path';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { mapPayloadToMdx, type NeuroSeoPayload } from '@/lib/neuroseo/mapPayload';
+import { routeFor } from '@/lib/neuroseo/routeFor';
 
 const MAX_BODY_SIZE_BYTES = 2 * 1024 * 1024;
 
@@ -47,8 +51,29 @@ export async function POST(req: Request) {
     }
 
     if (event === 'post.publish') {
-      // TODO: implement mapping + git commit
-      return Response.json({ id: 'test', url: 'https://placeholder.com' });
+      // Parse the payload
+      const payload: NeuroSeoPayload = JSON.parse(rawBody);
+
+      // Determine which content folder to use based on tags
+      const folder = routeFor(payload.tags);
+
+      // Map the payload to MDX format
+      const mdx = mapPayloadToMdx(payload);
+
+      // Write to local disk
+      const contentDir = path.join(process.cwd(), 'content', folder);
+      const filePath = path.join(contentDir, `${payload.slug}.mdx`);
+
+      // NOTE: writes to local disk for now. Replace with commitToGit() once GitHub API access is available.
+      await mkdir(contentDir, { recursive: true });
+      await writeFile(filePath, mdx, 'utf-8');
+
+      // Return success response
+      const siteUrl = process.env.SITE_PUBLIC_URL ?? 'http://localhost:3100';
+      return Response.json({
+        id: payload.slug,
+        url: `${siteUrl}/${folder}/${payload.slug}`,
+      });
     }
 
     return Response.json({ ok: true });

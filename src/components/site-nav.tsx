@@ -1,15 +1,37 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import { APP_NAME, NAV_LINKS, LOGIN_URL, SIGNUP_URL } from "@/lib/site";
+import { Menu, X, ChevronDown, BookOpen, GitCompare, Layers } from "lucide-react";
+import { APP_NAME, NAV_LINKS, LOGIN_URL, SIGNUP_URL, RESOURCES_DROPDOWN } from "@/lib/site";
+
+/* ─── icon map ─────────────────────────────────────────── */
+const RESOURCE_ICONS: Record<string, React.ReactNode> = {
+  blog: (
+    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/20 to-indigo-500/20 ring-1 ring-white/10">
+      <BookOpen className="h-4 w-4 text-violet-300" />
+    </span>
+  ),
+  alternatives: (
+    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 ring-1 ring-white/10">
+      <Layers className="h-4 w-4 text-emerald-300" />
+    </span>
+  ),
+  compare: (
+    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/20 to-sky-500/20 ring-1 ring-white/10">
+      <GitCompare className="h-4 w-4 text-cyan-300" />
+    </span>
+  ),
+};
 
 export function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
+  const resourcesRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -17,6 +39,23 @@ export function SiteNav() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  /* close dropdown on outside click */
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (resourcesRef.current && !resourcesRef.current.contains(e.target as Node)) {
+        setResourcesOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  /* close dropdown on route change */
+  useEffect(() => {
+    setResourcesOpen(false);
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   return (
     /* Outer wrapper — fixed, full-width, transparent, just for positioning */
@@ -115,6 +154,85 @@ export function SiteNav() {
               </Link>
             );
           })}
+
+          {/* ── Resources dropdown ── */}
+          <div
+            ref={resourcesRef}
+            className="relative"
+            onMouseEnter={() => setResourcesOpen(true)}
+            onMouseLeave={() => setResourcesOpen(false)}
+          >
+            <button
+              onClick={() => setResourcesOpen((v) => !v)}
+              className={`flex items-center gap-1 py-1 transition hover:text-white ${resourcesOpen ? "text-white" : ""}`}
+            >
+              Resources
+              <motion.span
+                animate={{ rotate: resourcesOpen ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="flex"
+              >
+                <ChevronDown className="h-3.5 w-3.5" />
+              </motion.span>
+            </button>
+
+            <AnimatePresence>
+              {resourcesOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="absolute left-1/2 top-full mt-3 -translate-x-1/2 z-50"
+                  style={{ minWidth: 340 }}
+                >
+                  {/* Arrow pointer */}
+                  <div className="absolute -top-[6px] left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 rounded-sm border-t border-l border-white/10 bg-zinc-900" />
+
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/95 p-2 shadow-[0_24px_64px_rgba(0,0,0,0.7)] backdrop-blur-2xl">
+                    {/* Ambient glow */}
+                    <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-600/5 via-transparent to-cyan-600/5" />
+
+                    <p className="px-3 pb-2 pt-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                      Resources
+                    </p>
+
+                    <div className="flex flex-col gap-0.5">
+                      {RESOURCES_DROPDOWN.map((item) => {
+                        const isResourceActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`group flex items-center gap-3 rounded-xl px-3 py-3 transition-all duration-150 hover:bg-white/5 ${
+                              isResourceActive ? "bg-white/5" : ""
+                            }`}
+                          >
+                            {RESOURCE_ICONS[item.icon]}
+                            <div className="flex flex-col gap-0.5 min-w-0">
+                              <span
+                                className={`text-sm font-semibold transition-colors duration-150 ${
+                                  isResourceActive ? "text-white" : "text-slate-200 group-hover:text-white"
+                                }`}
+                              >
+                                {item.label}
+                              </span>
+                              <span className="text-xs leading-tight text-slate-500 group-hover:text-slate-400 transition-colors duration-150">
+                                {item.description}
+                              </span>
+                            </div>
+                            <span className="ml-auto text-slate-600 opacity-0 transition-all group-hover:opacity-100 group-hover:text-slate-300">
+                              →
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </nav>
 
         {/* Desktop CTA buttons */}
@@ -180,6 +298,53 @@ export function SiteNav() {
                   {l.label}
                 </Link>
               ))}
+
+              {/* Mobile Resources accordion */}
+              <div>
+                <button
+                  onClick={() => setMobileResourcesOpen((v) => !v)}
+                  className="flex w-full items-center justify-between text-base font-semibold text-slate-200 transition hover:text-white"
+                >
+                  Resources
+                  <motion.span
+                    animate={{ rotate: mobileResourcesOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex"
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </motion.span>
+                </button>
+
+                <AnimatePresence>
+                  {mobileResourcesOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-3 flex flex-col gap-1 rounded-xl border border-white/10 bg-white/5 p-2">
+                        {RESOURCES_DROPDOWN.map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-white/10"
+                          >
+                            {RESOURCE_ICONS[item.icon]}
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-sm font-semibold text-slate-100">{item.label}</span>
+                              <span className="text-xs text-slate-500">{item.description}</span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <hr className="border-white/10" />
               <div className="flex flex-col gap-4">
                 <a

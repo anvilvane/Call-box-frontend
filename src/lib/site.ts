@@ -17,3 +17,24 @@ export const NAV_LINKS = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/contact", label: "Contact" },
 ];
+
+export const RESOURCES_DROPDOWN = [
+  {
+    href: "/blog",
+    label: "Blog",
+    description: "Insights, guides & product updates from the Callbox team.",
+    icon: "blog",
+  },
+  {
+    href: "/alternatives",
+    label: "Alternatives",
+    description: "See why teams switch to Callbox from other tools.",
+    icon: "alternatives",
+  },
+  {
+    href: "/compare",
+    label: "Compare",
+    description: "Side-by-side feature comparisons with the competition.",
+    icon: "compare",
+  },
+];

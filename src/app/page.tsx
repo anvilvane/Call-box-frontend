@@ -686,7 +686,8 @@ console.log(call.status); // 'queued'`}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
-            className="space-y-4"
+            className="space-y-4 max-h-[600px] overflow-y-auto pr-4 scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {PIPELINE_STEPS.map((step, idx) => (
               <motion.button
@@ -745,13 +746,15 @@ console.log(call.status); // 'queued'`}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.3 }}
-              className="hidden lg:block relative overflow-hidden rounded-[32px] border border-white/[0.08] bg-[#050606] p-6 shadow-2xl"
+              className="hidden lg:block sticky top-20 h-fit relative overflow-hidden rounded-[32px] border border-white/[0.08] bg-[#050606] p-6 shadow-2xl"
               aria-hidden="true"
             >
-              <img
+              <Image
                 src="/pipeline_overview.png"
                 alt="Callbox pipeline overview with lead capture, transcription, qualification, voice call, smart routing, and appointment booked"
-                className="w-full select-none rounded-[28px] opacity-95"
+                width={1200}
+                height={900}
+                className="w-full select-none rounded-[28px] opacity-95 object-contain"
               />
               <div className="absolute inset-0 rounded-[28px] bg-gradient-to-t from-black/70 via-transparent to-black/20" />
               <div className="absolute inset-0 rounded-[28px] bg-gradient-to-r from-black/70 via-transparent to-black/10" />
@@ -764,119 +767,61 @@ console.log(call.status); // 'queued'`}
       {/* ═══════════════════════════════════════════
           SECTION 4 — JOURNEY CARDS  (3-col grid)
       ══════════════════════════════════════════ */}
-      <section className="relative overflow-hidden py-24" style={{background: '#040d0c'}}>
+      <section className="relative overflow-hidden py-28" style={{background: '#040d0c'}}>
 
-        {/* ── Blend fade from black section above ── */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black to-transparent z-10" />
+        {/* Blend from section above */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black to-transparent z-10" />
 
-        {/* ── Top-center cyan spotlight beam ── */}
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[2px] h-[180px] bg-gradient-to-b from-cyan-400/80 to-transparent" />
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[280px] h-[220px]"
-          style={{background: 'radial-gradient(ellipse 60% 100% at 50% 0%, rgba(34,211,238,0.22) 0%, rgba(20,184,166,0.08) 45%, transparent 80%)'}} />
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]"
-          style={{background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(34,211,238,0.06) 0%, transparent 70%)'}} />
-
-        {/* ── Left curved particle wave ── */}
-        <div className="pointer-events-none absolute left-0 top-0 h-full w-[220px] opacity-60">
-          <svg viewBox="0 0 220 700" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+        {/* Left particle wave */}
+        <div className="pointer-events-none absolute left-0 top-0 h-full w-[200px] opacity-50">
+          <svg viewBox="0 0 200 700" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
             <defs>
-              <linearGradient id="waveL" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <linearGradient id="growthWaveL" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
                 <stop offset="0%" stopColor="#22d3ee" stopOpacity="0" />
-                <stop offset="30%" stopColor="#22d3ee" stopOpacity="0.5" />
-                <stop offset="70%" stopColor="#34d399" stopOpacity="0.3" />
+                <stop offset="40%" stopColor="#22d3ee" stopOpacity="0.45" />
+                <stop offset="80%" stopColor="#34d399" stopOpacity="0.25" />
                 <stop offset="100%" stopColor="#34d399" stopOpacity="0" />
               </linearGradient>
             </defs>
-            {/* Wave path */}
-            <path d="M20,0 Q120,120 40,200 Q-20,280 80,380 Q160,460 60,560 Q0,620 30,700" stroke="url(#waveL)" strokeWidth="1" fill="none" />
-            <path d="M50,0 Q140,100 70,220 Q10,310 100,400 Q180,480 80,580 Q20,640 50,700" stroke="url(#waveL)" strokeWidth="0.5" fill="none" opacity="0.5" />
-            {/* Dots along wave */}
-            {[{cx:22,cy:60},{cx:90,cy:130},{cx:42,cy:210},{cx:20,cy:290},{cx:78,cy:370},{cx:148,cy:440},{cx:68,cy:530},{cx:20,cy:600},{cx:32,cy:680}].map((d,i)=>(
-              <circle key={i} cx={d.cx} cy={d.cy} r="2.5" fill="#22d3ee" opacity={0.15+i*0.04} />
+            <path d="M30,0 Q120,100 50,200 Q-10,300 70,400 Q140,480 50,580 Q10,640 30,700" stroke="url(#growthWaveL)" strokeWidth="1" fill="none" />
+            <path d="M60,0 Q150,120 80,220 Q20,320 100,420 Q170,500 80,600 Q30,660 60,700" stroke="url(#growthWaveL)" strokeWidth="0.5" fill="none" opacity="0.4" />
+            {[{cx:32,cy:70},{cx:100,cy:150},{cx:52,cy:240},{cx:25,cy:330},{cx:72,cy:410},{cx:130,cy:480},{cx:55,cy:570},{cx:25,cy:650}].map((d,i)=>(
+              <circle key={i} cx={d.cx} cy={d.cy} r="2.5" fill="#22d3ee" opacity={0.2+i*0.04} />
             ))}
-            {/* Small scattered dots */}
-            {[{cx:140,cy:80,r:1.5},{cx:170,cy:160,r:1},{cx:180,cy:260,r:1.5},{cx:160,cy:340,r:1},{cx:190,cy:440,r:1.5},{cx:150,cy:520,r:1}].map((d,i)=>(
-              <circle key={`s${i}`} cx={d.cx} cy={d.cy} r={d.r} fill="#34d399" opacity="0.25" />
+            {[{cx:150,cy:90,r:1.5},{cx:170,cy:200,r:1},{cx:160,cy:330,r:1.5},{cx:180,cy:450,r:1},{cx:155,cy:560,r:1.5}].map((d,i)=>(
+              <circle key={`sd${i}`} cx={d.cx} cy={d.cy} r={d.r} fill="#34d399" opacity="0.2" />
             ))}
           </svg>
         </div>
 
-        {/* ── Right curved particle wave ── */}
-        <div className="pointer-events-none absolute right-0 top-0 h-full w-[220px] opacity-60">
-          <svg viewBox="0 0 220 700" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+        {/* Right particle wave */}
+        <div className="pointer-events-none absolute right-0 top-0 h-full w-[200px] opacity-50">
+          <svg viewBox="0 0 200 700" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
             <defs>
-              <linearGradient id="waveR" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+              <linearGradient id="growthWaveR" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
                 <stop offset="0%" stopColor="#22d3ee" stopOpacity="0" />
-                <stop offset="30%" stopColor="#22d3ee" stopOpacity="0.5" />
-                <stop offset="70%" stopColor="#34d399" stopOpacity="0.3" />
+                <stop offset="40%" stopColor="#22d3ee" stopOpacity="0.45" />
+                <stop offset="80%" stopColor="#34d399" stopOpacity="0.25" />
                 <stop offset="100%" stopColor="#34d399" stopOpacity="0" />
               </linearGradient>
             </defs>
-            <path d="M200,0 Q100,120 180,200 Q240,280 140,380 Q60,460 160,560 Q220,620 190,700" stroke="url(#waveR)" strokeWidth="1" fill="none" />
-            <path d="M170,0 Q80,100 150,220 Q210,310 120,400 Q40,480 140,580 Q200,640 170,700" stroke="url(#waveR)" strokeWidth="0.5" fill="none" opacity="0.5" />
-            {[{cx:198,cy:60},{cx:130,cy:130},{cx:178,cy:210},{cx:200,cy:290},{cx:142,cy:370},{cx:72,cy:440},{cx:152,cy:530},{cx:200,cy:600},{cx:188,cy:680}].map((d,i)=>(
-              <circle key={i} cx={d.cx} cy={d.cy} r="2.5" fill="#22d3ee" opacity={0.15+i*0.04} />
+            <path d="M170,0 Q80,100 150,200 Q210,300 130,400 Q60,480 150,580 Q190,640 170,700" stroke="url(#growthWaveR)" strokeWidth="1" fill="none" />
+            <path d="M140,0 Q50,120 120,220 Q180,320 100,420 Q30,500 120,600 Q170,660 140,700" stroke="url(#growthWaveR)" strokeWidth="0.5" fill="none" opacity="0.4" />
+            {[{cx:168,cy:70},{cx:100,cy:150},{cx:148,cy:240},{cx:175,cy:330},{cx:128,cy:410},{cx:70,cy:480},{cx:145,cy:570},{cx:175,cy:650}].map((d,i)=>(
+              <circle key={i} cx={d.cx} cy={d.cy} r="2.5" fill="#22d3ee" opacity={0.2+i*0.04} />
             ))}
-            {[{cx:60,cy:80,r:1.5},{cx:30,cy:180,r:1},{cx:50,cy:270,r:1.5},{cx:40,cy:360,r:1},{cx:30,cy:460,r:1.5},{cx:60,cy:540,r:1}].map((d,i)=>(
-              <circle key={`s${i}`} cx={d.cx} cy={d.cy} r={d.r} fill="#34d399" opacity="0.25" />
+            {[{cx:40,cy:100,r:1.5},{cx:25,cy:210,r:1},{cx:35,cy:340,r:1.5},{cx:20,cy:460,r:1},{cx:40,cy:570,r:1.5}].map((d,i)=>(
+              <circle key={`sd${i}`} cx={d.cx} cy={d.cy} r={d.r} fill="#34d399" opacity="0.2" />
             ))}
           </svg>
         </div>
 
-        {/* ── Left 3D cube ── */}
-        <div className="pointer-events-none absolute left-10 top-12 hidden lg:block">
-          <div className="relative h-[90px] w-[90px] animate-float-x" style={{animationDuration:'7s'}}>
-            {/* Cube faces */}
-            <div className="absolute inset-0 rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-[#0a2520] to-[#061812] shadow-[inset_0_1px_0_rgba(34,211,238,0.2),0_0_30px_rgba(34,211,238,0.08)]" />
-            <div className="absolute inset-[6px] rounded-xl border border-cyan-500/15 bg-cyan-500/[0.03]" />
-            {/* Icon */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="#22d3ee" strokeWidth="1.5" opacity="0.7">
-                <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
-              </svg>
-            </div>
-            {/* Glow */}
-            <div className="absolute -inset-2 rounded-2xl bg-cyan-500/10 blur-xl" />
-          </div>
-          {/* Small floating dot */}
-          <div className="absolute -bottom-6 left-6 h-3 w-3 rounded-full bg-cyan-500/40 blur-sm" />
-        </div>
-
-        {/* ── Right 3D cube ── */}
-        <div className="pointer-events-none absolute right-10 top-12 hidden lg:block">
-          <div className="relative h-[90px] w-[90px] animate-float-x" style={{animationDuration:'9s',animationDelay:'-3s'}}>
-            <div className="absolute inset-0 rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-[#0a2520] to-[#061812] shadow-[inset_0_1px_0_rgba(34,211,238,0.2),0_0_30px_rgba(34,211,238,0.08)]" />
-            <div className="absolute inset-[6px] rounded-xl border border-cyan-500/15 bg-cyan-500/[0.03]" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="#22d3ee" strokeWidth="1.5" opacity="0.7">
-                <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
-                <circle cx="8" cy="6" r="2" fill="#22d3ee" fillOpacity="0.5" stroke="none"/>
-                <circle cx="16" cy="12" r="2" fill="#22d3ee" fillOpacity="0.5" stroke="none"/>
-                <circle cx="10" cy="18" r="2" fill="#22d3ee" fillOpacity="0.5" stroke="none"/>
-              </svg>
-            </div>
-            <div className="absolute -inset-2 rounded-2xl bg-cyan-500/10 blur-xl" />
-          </div>
-        </div>
-
-        {/* ── Glowing sphere (right side, mid) ── */}
-        <div className="pointer-events-none absolute right-16 top-1/3 hidden lg:block">
-          <div className="h-10 w-10 rounded-full animate-float-x" style={{animationDuration:'11s',animationDelay:'-5s',
-            background:'radial-gradient(circle at 35% 35%, rgba(34,211,238,0.9) 0%, rgba(6,182,212,0.6) 40%, rgba(8,145,178,0.2) 70%, transparent 100%)',
-            boxShadow:'0 0 20px rgba(34,211,238,0.5), 0 0 40px rgba(34,211,238,0.2)'}} />
-        </div>
-
-        {/* ── Small left dot ── */}
-        <div className="pointer-events-none absolute left-20 top-2/3 hidden lg:block h-4 w-4 rounded-full"
-          style={{background:'radial-gradient(circle, rgba(52,211,153,0.8) 0%, transparent 70%)', boxShadow:'0 0 10px rgba(52,211,153,0.4)'}} />
-
-        {/* ── Scattered micro particles ── */}
-        {[{t:'8%',l:'22%'},{t:'15%',l:'75%'},{t:'35%',l:'18%'},{t:'60%',l:'82%'},{t:'75%',l:'25%'},{t:'85%',l:'70%'}].map((p,i)=>(
-          <div key={i} className="pointer-events-none absolute h-1.5 w-1.5 rounded-full bg-cyan-400/30"
+        {/* Scattered micro particles */}
+        {[{t:'12%',l:'28%'},{t:'30%',l:'70%'},{t:'55%',l:'20%'},{t:'72%',l:'78%'},{t:'88%',l:'35%'}].map((p,i)=>(
+          <div key={i} className="pointer-events-none absolute h-1.5 w-1.5 rounded-full bg-cyan-400/20"
             style={{top:p.t, left:p.l, boxShadow:'0 0 6px rgba(34,211,238,0.4)'}} />
         ))}
-
-
 
         <div className="relative mx-auto max-w-6xl px-6 text-center">
           <motion.div
