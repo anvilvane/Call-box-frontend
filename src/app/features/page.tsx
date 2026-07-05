@@ -81,7 +81,7 @@ export default function FeaturesPage() {
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs font-mono text-slate-400"
         >
-          ✦ Full platform overview
+          Full platform overview
         </motion.div>
 
         <motion.h1 

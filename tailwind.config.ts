@@ -22,8 +22,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
-        heading: ["var(--font-manrope)", "sans-serif"],
+        sans: ["var(--font-satoshi)", "ui-sans-serif", "system-ui", "sans-serif"],
+        heading: ["var(--font-satoshi)", "sans-serif"],
       },
       animation: {
         "pulse-slow": "pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite",

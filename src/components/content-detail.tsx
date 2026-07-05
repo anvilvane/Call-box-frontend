@@ -1,8 +1,6 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { PostMeta } from "@/lib/content";
-import { SiteNav } from "./site-nav";
 import { PrimaryCta } from "./cta";
-import { SiteFooter } from "./site-footer";
 
 export async function ContentDetail({
   post,
@@ -52,9 +50,7 @@ export async function ContentDetail({
   };
 
   return (
-    <>
-      <SiteNav />
-      <main className="relative w-full overflow-hidden bg-black text-white">
+    <main className="relative w-full overflow-hidden bg-black text-white">
         {/* Article Container */}
         <div className="relative pt-32 pb-24">
           <div className="mx-auto max-w-3xl px-6">
@@ -131,7 +127,5 @@ export async function ContentDetail({
           </div>
         </div>
       </main>
-      <SiteFooter />
-    </>
   );
 }

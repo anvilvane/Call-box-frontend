@@ -113,7 +113,7 @@ export default function HowItWorksPage() {
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-mono uppercase tracking-[0.35em] text-cyan-300"
         >
-          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-cyan-500/10 text-cyan-300">⚡</span>
+          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-cyan-500/10 text-cyan-300"><Zap className="h-3.5 w-3.5" /></span>
           FOUR SIMPLE STEPS
         </motion.div>
 
